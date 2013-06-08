@@ -14,9 +14,10 @@ var Clavier = (function clavierScope() {
     return el;
   }
 
-  function Clavier(width, height) {
+  function Clavier(width, height, blacks) {
     this.width = width;
     this.height = height;
+    this.blacks = blacks || [0, 2, 3, 5, 6]; // Start from an A
     this.reset();
   }
 
@@ -43,7 +44,7 @@ var Clavier = (function clavierScope() {
       var bWidth = wWidth / 2;
 
       var whitekeys = Math.floor((w - 2 * (w/wWidth)) / wWidth);
-      var blacks = [0, 2, 3, 5, 6];
+      var blacks = this.blacks;
 
       for (var i = 0; i < whitekeys; ++i) {
         // Create white key

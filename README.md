@@ -45,8 +45,13 @@ I'm sure you can style your piano in way many better ways than I've styled this 
 There's just the `Clavier` object.
 
 
-### Clavier(width, height )
+### Clavier(width, height[, blacks])
  - The constructor for the Clavier object takes a width and a height - both in pixels.
+
+It also takes an optional `blacks` array, which specifies the positions
+of the black keys. It defaults to `[0, 2, 3, 5, 6]` which is a keyboard starting
+from note `A`. You could for example set it to `[0, 1, 2, 4, 5]` which results in a keyboard
+starting from note `F`.
 
 #### clavier.reset()
  - Resets/rebuilds the entire piano DOM structure
