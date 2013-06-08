@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Clavier - A JavaScript Musical Keyboard</title>
+    <style>
+      body {
+        background-color: #F0F0F0;
+      }
+
+      .pressed {
+        box-shadow: inset 0 0 7px 1px #626262,
+                    0 8px 12px -1px rgba(81, 203, 238, 1) !important; 
+      }
+    </style>
+    <link href='../clavier.css' rel='stylesheet' type='text/css' />
+  </head>
+  <body>
+    <script src='./teoria.js'></script>
+    <script src='../clavier.js'></script>
+    <script>
+      var clavier = new Clavier(700, 200);
+      clavier.appendTo(document.body);
+
+      var pressed = null;
+
+      clavier.on('mousedown', function(e) {
+        pressed = e.target;
+        pressed.classList.add('pressed');
+      });
+
+      clavier.on('mouseup', function() {
+        if (pressed) {
+          pressed.classList.remove('pressed');
+          pressed = null;
+        }
+      });
+
+      // Show a Dm#11 chord on the piano
+      teoria.chord('Dm#11', 1).notes().forEach(function(note) {
+        clavier.key(note.key() - 1).classList.add('pressed');
+      });
+    </script>
+  </body>
+</html>
