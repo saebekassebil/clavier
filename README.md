@@ -1,27 +1,34 @@
 # Clavier
 
+![Piano showing a Dm(#11)](http://i.minus.com/iIBKXWmXAhpVe.png)
+
 Render magnificent piano keyboards with velvet borders and everything - All in the trusty DOM.
 
 ## Usage
 
 Usage is simple. Just drop the `clavier.js` and `clavier.css` files in your markup, and you should be ready to render some nice keyboards.
 
-    <script src='./clavier.js'></script>
-    <script>
-      // Create a piano, 700px wide and 200px high
-      var piano = new Clavier(700, 200); 
-      
-      // Append the piano element to the DOM
-      piano.appendTo(document.body)
-    </script>
-    
+```html
+<script src='./clavier.js'></script>
+<script>
+  // Create a piano, 700px wide and 200px high
+  var piano = new Clavier(700, 200); 
+  
+  // Append the piano element to the DOM
+  piano.appendTo(document.body)
+</script>
+```    
 Simple, right?
 
 To get that nice pressed inset shadow, you just append a '.pressed' CSS class to a key's class property:
 
-	// The keys are zero-indexed
-    piano.key(3).classList.add('pressed');
-    
+```javascript
+// The keys are zero-indexed
+piano.key(3).classList.add('pressed');
+```
+
+You can take a look in the `examples/` folder if you want to see some simple use-case(s)
+
 ## CSS Customization
 
 I'm sure you can style your piano in way many better ways than I've styled this by default. Set it in maple or beech? You got these CSS classes to toy around with:
