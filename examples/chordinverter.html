@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Clavier - A JavaScript Musical Keyboard</title>
+    <link href='../clavier.css' rel='stylesheet' type='text/css' />
+    <style>
+      body {
+        background-color: #F0F0F0;
+        font-size: 10pt;
+        color: #556270;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      h1 {
+        font-weight: 300
+      }
+
+      #container {
+        width: 750px;
+        margin: 20px auto;
+        text-align: center;
+      }
+
+      #chordinput {
+        outline: none;
+        border: 1px solid #ccc;
+        border-left: 5px solid #51CBEE;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+
+      #chordinput.error {
+        border-left: 5px solid #EE6751;
+      }
+
+      p {
+        font-size: 9pt;
+        font-weight: 300;
+      }
+
+      #errormessage {
+        color: #EE6751;
+      }
+
+      .clavier-piano {
+        margin: 10px;
+      }
+
+      .pressed {
+        box-shadow: inset 0 0 7px 1px #626262,
+                    0 8px 12px -1px rgba(81, 203, 238, 1) !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id='container'>
+      <h1>Chord inverter</h1>
+      <input id='chordinput' type='text' value='Amaj7' />
+      <p id='errormessage'></p>
+      <p>Write a chord in the input (try <i>Dm9/F</i> or perhaps
+      <i>Cm<sup>maj7</sup></i>), and see its different inversions by
+      repeatedly pressing Enter</p>
+    </div>
+    <script src='./teoria.js'></script>
+    <script src='../clavier.js'></script>
+    <script>
+      var clavier = new Clavier(700, 150);
+      var input = document.getElementById('chordinput');
+      var errorMessage = document.getElementById('errormessage');
+      document.getElementById('container').insertBefore(clavier.element, input);
+
+      function showChord(name, inversion) {
+        var chord = teoria.chord(name, 1);
+        var voicing = chord.voicing();
+        if (chord.root.interval(voicing[0].compound()).key() < 6) {
+          chord.transpose('P8');
+        }
+
+        inversion = inversion % voicing.length;
+        while (inversion--) {
+          var first = chord._voicing[0];
+          first.interval += 7;
+          if (first.direction === 'down') {
+            first = first.invert();
+            first.direction = 'up';
+          } else {
+            first.compoundOctaves++;
+          }
+
+          chord._voicing = chord._voicing.slice(1).concat(first);
+        }
+
+        chord.notes().forEach(function(note) {
+          clavier.key(note.key() - 1).classList.add('pressed');
+        });
+      }
+
+      var lastInput = input.value, inversion = 0;
+      input.addEventListener('keyup', function(e) {
+        if (e.keyCode !== 13 || !this.value) return;
+
+        if (this.value === lastInput) {
+          inversion++;
+        } else {
+          lastInput = this.value;
+          inversion = 0;
+        }
+
+        clavier.reset();
+        try {
+          showChord(this.value, inversion);
+
+          this.classList.remove('error');
+          errorMessage.style.display = 'none';
+        } catch (e) {
+          this.classList.add('error');
+
+          errorMessage.textContent = e.toString();
+          errorMessage.style.display = 'block';
+        }
+      }, false);
+
+      showChord(input.value);
+      input.focus();
+    </script>
+  </body>
+</html>
